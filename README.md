@@ -45,3 +45,13 @@ The edge computing devices are triggered to reboot into recovery mode by:
 | BootIntoRecovery | 1                                                                   |
 | Msg->command     | boot-recovery                                                       |
 | Msg->recovery    | recovery --prompt_and_wipe_data --reason=RescueParty --locale=en-US |
+
+### Factory Reset
+
+| Name             | Value                               |
+| :--------------- | :---------------------------------- |
+| Solution         | normal-run                          |
+| BootReason       | 1                                   |
+| BootIntoRecovery | 1                                   |
+| Msg->command     | boot-recovery                       |
+| Msg->recovery    | recovery --wipe_data --locale=en-US |
