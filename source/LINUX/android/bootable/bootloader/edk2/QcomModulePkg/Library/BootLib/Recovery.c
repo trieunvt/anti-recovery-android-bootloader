@@ -219,7 +219,9 @@ RecoveryInit (BOOLEAN *BootIntoRecovery, BOOLEAN *IsSlotSwitched)
     DEBUG ((EFI_D_ERROR, "Message status: [%d] %a\n", sizeof (Msg->status), Msg->status));
     DEBUG ((EFI_D_ERROR, "Message recovery: [%d] %a\n", sizeof (Msg->recovery), Msg->recovery));
 
-    if (!BootIntoRecoveryStore) {
+    if (BootIntoRecoveryStore) {
+      *IsSlotSwitched = TRUE;
+    } else {
       *BootIntoRecovery = FALSE;
     }
 

@@ -35,3 +35,13 @@ The edge computing devices are triggered to reboot into recovery mode by:
 | BootIntoRecovery | 1                                                                     |
 | Msg->command     | boot-recovery                                                         |
 | Msg->recovery    | recovery --prompt_and_wipe_data --reason=set_policy_failed:/data/fota |
+
+### Rescue Party
+
+| Name             | Value                                                               |
+| :--------------- | :------------------------------------------------------------------ |
+| Solution         | slot-switch                                                         |
+| BootReason       | 1                                                                   |
+| BootIntoRecovery | 1                                                                   |
+| Msg->command     | boot-recovery                                                       |
+| Msg->recovery    | recovery --prompt_and_wipe_data --reason=RescueParty --locale=en-US |

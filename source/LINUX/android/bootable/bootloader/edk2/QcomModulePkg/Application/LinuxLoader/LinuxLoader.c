@@ -303,6 +303,17 @@ LinuxLoaderEntry (IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *SystemTable)
     Info.BootIntoRecovery = BootIntoRecovery;
     Info.BootReasonAlarm = BootReasonAlarm;
 
+    /* trieunvt */
+    /* Use Info.BootState as trigger flag */
+	  DEBUG ((EFI_D_ERROR, "Android bootloader version: 1.0.0\n"));
+    if (BootIntoRecovery && IsSlotSwitched) {
+      Info.BootState = ORANGE;
+      Info.BootIntoRecovery = FALSE;
+      DEBUG ((EFI_D_ERROR, "Ignore boot into recovery mode triggered by recovery message\n"));
+      DEBUG ((EFI_D_ERROR, "BootState: %u, BootIntoRecovery: %u\n", Info.BootState, Info.BootIntoRecovery));
+    }
+    /* trieunvt */
+
     Status = LoadImageAndAuth (&Info);
     if (Status != EFI_SUCCESS) {
       DEBUG ((EFI_D_ERROR, "LoadImageAndAuth failed: %r\n", Status));

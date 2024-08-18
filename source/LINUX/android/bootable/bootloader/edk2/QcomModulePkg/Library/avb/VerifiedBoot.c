@@ -1389,6 +1389,29 @@ LoadImageAndAuth (BootInfo *Info)
       return EFI_LOAD_ERROR;
     }
 
+    /* trieunvt */
+    if (Info->BootState == ORANGE) {
+      Info->BootState = 0;
+      Slot Slots[] = {{L"_a"}, {L"_b"}};
+      Slot *AlternateSlot = NULL;
+
+      if (StrnCmp (CurrentSlot.Suffix, Slots[0].Suffix, StrLen (Slots[0].Suffix)) == 0) {
+        AlternateSlot = &Slots[1];
+      } else {
+        AlternateSlot = &Slots[0];
+      }
+
+      DEBUG ((EFI_D_ERROR, "Switching slot from %s to %s\n",
+                            CurrentSlot.Suffix, AlternateSlot->Suffix));
+
+      if (HandleActiveSlotUnbootable() == EFI_LOAD_ERROR) {
+        GUARD (ClearUnbootable());
+        DEBUG ((EFI_D_ERROR, "Alternate slot %s is unbootable, continue booting from slot %s\n",
+                              AlternateSlot->Suffix, CurrentSlot.Suffix));
+      }
+    }
+    /* trieunvt */
+
     if (IsDynamicPartitionSupport () &&
           Info->BootIntoRecovery) {
       DEBUG ((EFI_D_INFO, "Booting Into Recovery Mode\n"));
