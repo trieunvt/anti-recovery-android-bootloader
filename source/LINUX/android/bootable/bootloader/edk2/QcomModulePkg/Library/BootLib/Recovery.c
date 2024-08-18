@@ -150,7 +150,9 @@ WriteRecoveryMessage (CHAR8 *Command)
 }
 
 EFI_STATUS
-RecoveryInit (BOOLEAN *BootIntoRecovery)
+/* trieunvt */
+RecoveryInit (BOOLEAN *BootIntoRecovery, BOOLEAN *IsSlotSwitched)
+/* trieunvt */
 {
   EFI_STATUS Status;
   struct RecoveryMessage *Msg = NULL;
@@ -188,6 +190,11 @@ RecoveryInit (BOOLEAN *BootIntoRecovery)
            (struct RecoveryMessage *) ((CHAR8 *) PartitionData + PageSize) :
            (struct RecoveryMessage *) PartitionData;
 
+  /* trieunvt */
+  BOOLEAN BootIntoRecoveryStore = *BootIntoRecovery;
+  *BootIntoRecovery = FALSE;
+  /* trieunvt */
+
   // Ensure NULL termination
   Msg->command[sizeof (Msg->command) - 1] = '\0';
   if (Msg->command[0] != 0 && Msg->command[0] != 255)
@@ -205,6 +212,26 @@ RecoveryInit (BOOLEAN *BootIntoRecovery)
                           AsciiStrLen (RECOVERY_BOOT_FASTBOOT))) {
     *BootIntoRecovery = TRUE;
   }
+
+  /* trieunvt */
+  if (*BootIntoRecovery) {
+    DEBUG ((EFI_D_ERROR, "Message command: [%d] %a\n", sizeof (Msg->command), Msg->command));
+    DEBUG ((EFI_D_ERROR, "Message status: [%d] %a\n", sizeof (Msg->status), Msg->status));
+    DEBUG ((EFI_D_ERROR, "Message recovery: [%d] %a\n", sizeof (Msg->recovery), Msg->recovery));
+
+    if (!BootIntoRecoveryStore) {
+      *BootIntoRecovery = FALSE;
+    }
+
+    SetMem(Msg->command, AsciiStrLen(Msg->command), 0);
+    if (WriteRecoveryMessage(Msg->command) != EFI_SUCCESS) {
+      *BootIntoRecovery = FALSE;
+      DEBUG ((EFI_D_ERROR, "Erase recovery message failed, continue booting from active slot\n"));
+    } else {
+      DEBUG ((EFI_D_ERROR, "Recovery message erased\n"));
+    }
+  }
+  /* trieunvt */
 
   FreePool (PartitionData);
   PartitionData = NULL;

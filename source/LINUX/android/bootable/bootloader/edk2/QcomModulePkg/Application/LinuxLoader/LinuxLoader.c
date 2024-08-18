@@ -275,7 +275,11 @@ LinuxLoaderEntry (IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *SystemTable)
     break;
   }
 
-  Status = RecoveryInit (&BootIntoRecovery);
+  /* trieunvt */
+  BOOLEAN IsSlotSwitched = TRUE;
+  Status = RecoveryInit (&BootIntoRecovery, &IsSlotSwitched);
+  /* trieunvt */
+
   if (Status != EFI_SUCCESS)
     DEBUG ((EFI_D_VERBOSE, "RecoveryInit failed ignore: %r\n", Status));
 

@@ -44,7 +44,9 @@ struct RecoveryMessage {
 };
 
 EFI_STATUS
-RecoveryInit(BOOLEAN *BootIntoRecovery);
+/* trieunvt */
+RecoveryInit(BOOLEAN *BootIntoRecovery, BOOLEAN *IsSlotSwitched);
+/* trieunvt */
 EFI_STATUS
 GetFfbmCommand (CHAR8 *FfbmMode, UINT32 Sz);
 EFI_STATUS
